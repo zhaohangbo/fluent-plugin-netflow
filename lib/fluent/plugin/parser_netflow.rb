@@ -189,10 +189,13 @@ module Fluent
           case record.flowset_id
           when 0
             handle_v9_flowset_template(flowset, record)
+	    # "Unsupported field", type: 148, length: 4
           when 1
             handle_v9_flowset_options_template(flowset, record)
+            #
           when 256..65535
             handle_v9_flowset_data(flowset, record, block)
+            # No matching template for flow id for 256, 263
           else
             $log.warn "Unsupported flowset id #{record.flowset_id}"
           end
@@ -200,6 +203,7 @@ module Fluent
       end
 
       def handle_v9_flowset_template(flowset, record)
+        $log.warn("========= enter handle_v9_flowset_template ==========")
         record.flowset_data.templates.each do |template|
           catch (:field) do
             fields = []
@@ -221,6 +225,7 @@ module Fluent
       NETFLOW_V9_FIELD_CATEGORIES = ['scope', 'option']
 
       def handle_v9_flowset_options_template(flowset, record)
+        $log.warn("enter handle_v9_flowset_options_template")
         record.flowset_data.templates.each do |template|
           catch (:field) do
             fields = []
@@ -246,7 +251,9 @@ module Fluent
       FIELDS_FOR_COPY_V9 = ['version', 'flow_seq_num']
 
       def handle_v9_flowset_data(flowset, record, block)
+        $log.warn("enter handle_v9_flowset_data")
         key = "#{flowset.source_id}|#{record.flowset_id}"
+        $log.warn("flowset.source_id|record.flowset_id is #{key}")
         template = @templates[key]
         if ! template
           $log.warn("No matching template for flow id #{record.flowset_id}")
@@ -300,6 +307,7 @@ module Fluent
       end
 
       def netflow_field_for(type, length, category='option')
+        # $log.warn("enter netflow_field_for")
         if @fields[category].include?(type)
           field = @fields[category][type]
           if field.is_a?(Array)

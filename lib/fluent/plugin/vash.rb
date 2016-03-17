@@ -1,7 +1,13 @@
 module Fluent
   class TextParser
     class NetflowParser < Parser
+
       # https://gist.github.com/joshaven/184837
+      # Class: Vash (Ruby Volatile Hash)
+      # Hash that returns values only for a short time.  This is useful as a cache
+      # where I/O is involved.  The primary goal of this object is to reduce I/O 
+      # access and due to the nature of I/O being slower then memory, you should also
+      # see a gain in quicker response times.
       class Vash < Hash
         def initialize(constructor = {})
           @register ||= {}
@@ -70,6 +76,7 @@ module Fluent
           key = sterile(key)
         end
       end
-    end
-  end
-end
+
+    end #end clas NetflowParser < Parser
+  end #end class TextParser
+end #end Fluent

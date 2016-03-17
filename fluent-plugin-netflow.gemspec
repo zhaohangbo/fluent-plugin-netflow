@@ -4,11 +4,11 @@ $:.push File.expand_path('../lib', __FILE__)
 Gem::Specification.new do |gem|
   gem.name        = "fluent-plugin-netflow"
   gem.description = "Netflow plugin for Fluentd"
-  gem.homepage    = "https://github.com/repeatedly/fluent-plugin-netflow"
+  gem.homepage    = "https://github.com/zhaohangbo/fluent-plugin-netflow"
   gem.summary     = gem.description
   gem.version     = File.read("VERSION").strip
-  gem.authors     = ["Masahiro Nakagawa"]
-  gem.email       = "repeatedly@gmail.com"
+  gem.authors     = ["Hangbo Zhao"]
+  gem.email       = "zhaohangbo1991@gmail.com"
   gem.has_rdoc    = false
   #gem.platform    = Gem::Platform::RUBY
   gem.license     = 'Apache License (2.0)'
