@@ -1,8 +1,13 @@
 require "bindata"
 
+# https://stackoverflow.com/questions/14739640/ruby-classes-within-classes-or-modules-within-modules
+# The InnerClass has no inheritance to OuterClass.
+# When you call OuterClass::InnerClass constant,
+# You are refering to the InnerClass constant that is namespaced under the OuterClass contstant which equals the Class.new statement assigned to it.
 module Fluent
   class TextParser
     class NetflowParser < Parser
+
       class IP4Addr < BinData::Primitive
         endian :big
         uint32 :storage
@@ -155,6 +160,7 @@ module Fluent
           end
         end
       end
-    end
-  end
-end
+
+    end #end for class NetflowParser 
+  end #end for class TextParser
+end #end for module Fluent

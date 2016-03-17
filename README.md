@@ -8,6 +8,10 @@ Use RubyGems:
 
     fluent-gem install fluent-plugin-netflow
 
+## Relations among the ruby files in lib/fluent/plugin
+
+  netflow_records.rb --> parser_netflow.rb --> in_netflow.rb
+
 ## Configuration
 
     <source>

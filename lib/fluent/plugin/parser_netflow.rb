@@ -3,6 +3,8 @@ require 'yaml'
 
 require 'fluent/parser'
 
+# http://www.tutorialspoint.com/ruby/ruby_modules.htm
+# require_relative to make Ruby aware that inclued files are from relative directory.
 require_relative 'netflow_records'
 require_relative 'vash'
 
