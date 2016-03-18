@@ -29,15 +29,20 @@ module Fluent
         end
 
         def []=(key, *args)
+        # a little bit o variable hacking to support (h[key, ttl] = value), which will come 
+        # accross as (key, [ttl, value]) whereas (h[key]=value) comes accross as (key, [value])
           if args.length == 2
-            value, ttl = args[1], args[0]
+            value, ttl = args[1], args[0] # map[key, [ttl, value]]
           elsif args.length == 1
-            value, ttl = args[0], 60
+            #value, ttl = args[0], 60      # map[key, [value]]
+            value, ttl = args[0], 60      # map[key, [value]]
           else
             raise ArgumentError, "Wrong number of arguments, expected 2 or 3, received: #{args.length+1}\n"+
               "Example Usage:  volatile_hash[:key]=value OR volatile_hash[:key, ttl]=value"
           end
           sterilize(key)
+	  #Pay attention here
+	  #cache ttl is 60 seconds
           ttl(key, ttl)
           regular_writer(key, value)
         end
@@ -64,6 +69,7 @@ module Fluent
           Time.now.to_i > @register[key].to_i
         end
 
+        #def ttl(key, secs=60)
         def ttl(key, secs=60)
           @register[key] = Time.now.to_i + secs.to_i
         end

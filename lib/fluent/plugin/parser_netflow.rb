@@ -15,7 +15,7 @@ module Fluent
       Plugin.register_parser('netflow', self)
 
       config_param :switched_times_from_uptime, :bool, default: false
-      config_param :cache_ttl, :integer, default: 4000
+      config_param :cache_ttl, :integer, default: 4000 #cache_time_to_live
       config_param :versions, :array, default: [5, 9]
       config_param :definitions, :string, default: nil
 
@@ -216,7 +216,13 @@ module Fluent
             # We get this far, we have a list of fields
             key = "#{flowset.source_id}|#{template.template_id}"
             @templates[key, @cache_ttl] = BinData::Struct.new(endian: :big, fields: fields)
+	    $log.warn("cache_ttl is #{@cache_ttl}")
+            $log.warn("added template,flowset.source_id|template.template_id is #{key}")
+
             # Purge any expired templates
+	    # @register.map {|k,v| clear(k) if v < Time.now.to_i}
+	    # So the current new cached template won't be purged because there is a ttl
+	    # Only purge the old template in last round.
             @templates.cleanup!
           end
         end
@@ -253,7 +259,7 @@ module Fluent
       def handle_v9_flowset_data(flowset, record, block)
         $log.warn("enter handle_v9_flowset_data")
         key = "#{flowset.source_id}|#{record.flowset_id}"
-        $log.warn("flowset.source_id|record.flowset_id is #{key}")
+        #$log.warn("flowset.source_id|record.flowset_id is #{key}")
         template = @templates[key]
         if ! template
           $log.warn("No matching template for flow id #{record.flowset_id}")
